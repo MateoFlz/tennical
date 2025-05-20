@@ -1,0 +1,2124 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Gestión de Horarios",
+        "description": "Documentación OpenAPI para la API de gestión de horarios, cursos, profesores y autenticación.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080",
+            "description": "Servidor local Docker"
+        }
+    ],
+    "paths": {
+        "/api/profesores/{id}/cursos": {
+            "get": {
+                "tags": [
+                    "Asignación"
+                ],
+                "summary": "Obtener cursos asignados a un profesor",
+                "operationId": "40913b108a07d3f591ec8b8052e8e90a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cursos asignados al profesor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "required": [
+                                            "profesor_id",
+                                            "curso_id"
+                                        ],
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "profesor_id": {
+                                                "type": "integer",
+                                                "example": 2
+                                            },
+                                            "curso_id": {
+                                                "type": "integer",
+                                                "example": 3
+                                            },
+                                            "semestre": {
+                                                "type": "string",
+                                                "example": "2025-1"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Profesor no encontrado"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Asignación"
+                ],
+                "summary": "Asignar un curso a un profesor",
+                "operationId": "8115db400b5c6e54e83c5866fc0c4c40",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "profesor_id",
+                                    "curso_id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "profesor_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "curso_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "semestre": {
+                                        "type": "string",
+                                        "example": "2025-1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Curso asignado correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "required": [
+                                        "profesor_id",
+                                        "curso_id"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "profesor_id": {
+                                            "type": "integer",
+                                            "example": 2
+                                        },
+                                        "curso_id": {
+                                            "type": "integer",
+                                            "example": 3
+                                        },
+                                        "semestre": {
+                                            "type": "string",
+                                            "example": "2025-1"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflicto de horario",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "mensaje": {
+                                            "type": "string",
+                                            "example": "Existe un conflicto de horario"
+                                        },
+                                        "detalles": {
+                                            "properties": {
+                                                "profesor_id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "dia": {
+                                                    "type": "string",
+                                                    "example": "Lunes"
+                                                },
+                                                "hora_inicio": {
+                                                    "type": "string",
+                                                    "example": "08:00"
+                                                },
+                                                "hora_fin": {
+                                                    "type": "string",
+                                                    "example": "10:00"
+                                                },
+                                                "conflicto_con": {
+                                                    "type": "string",
+                                                    "example": "Curso de Física"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Datos inválidos"
+                    },
+                    "404": {
+                        "description": "Profesor o curso no encontrados"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profesores/{id}/cursos/{curso_id}": {
+            "delete": {
+                "tags": [
+                    "Asignación"
+                ],
+                "summary": "Eliminar asignación de curso a profesor",
+                "operationId": "78d29aa454e43c8ee51e80cccca31b7b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "curso_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Asignación eliminada"
+                    },
+                    "404": {
+                        "description": "Profesor, curso o asignación no encontrados"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/verificar-conflicto": {
+            "post": {
+                "tags": [
+                    "Asignación"
+                ],
+                "summary": "Verificar si existe un conflicto de horario",
+                "operationId": "0b9256077841bb41d9a3278d438e93ba",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "profesor_id",
+                                    "curso_id",
+                                    "horario_id"
+                                ],
+                                "properties": {
+                                    "profesor_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "curso_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "horario_id": {
+                                        "type": "integer",
+                                        "example": 4
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "No hay conflictos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "conflicto": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "mensaje": {
+                                            "type": "string",
+                                            "example": "No hay conflictos de horario"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Existe un conflicto",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "mensaje": {
+                                            "type": "string",
+                                            "example": "Existe un conflicto de horario"
+                                        },
+                                        "detalles": {
+                                            "properties": {
+                                                "profesor_id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "dia": {
+                                                    "type": "string",
+                                                    "example": "Lunes"
+                                                },
+                                                "hora_inicio": {
+                                                    "type": "string",
+                                                    "example": "08:00"
+                                                },
+                                                "hora_fin": {
+                                                    "type": "string",
+                                                    "example": "10:00"
+                                                },
+                                                "conflicto_con": {
+                                                    "type": "string",
+                                                    "example": "Curso de Física"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Datos inválidos"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Autenticación y obtención de JWT",
+                "operationId": "bbc5fc109a828a65f0bd3a6a00d88d6b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "admin"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token JWT generado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                                        },
+                                        "expires_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-12-31T23:59:59Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Credenciales inválidas"
+                    }
+                }
+            }
+        },
+        "/api/conflictos": {
+            "get": {
+                "tags": [
+                    "Conflictos"
+                ],
+                "summary": "Obtener todos los conflictos de horarios existentes",
+                "operationId": "801b7391fd7b205faf81f86a5fa5d16a",
+                "responses": {
+                    "200": {
+                        "description": "Lista de conflictos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReporteConflictos"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profesores/{id}/conflictos": {
+            "get": {
+                "tags": [
+                    "Conflictos"
+                ],
+                "summary": "Obtener conflictos de horario de un profesor",
+                "operationId": "199a01d777f0d296b45b73fd5afa07c5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Conflictos del profesor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReporteConflictos"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Profesor no encontrado"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/cursos/{id}/conflictos": {
+            "get": {
+                "tags": [
+                    "Conflictos"
+                ],
+                "summary": "Obtener conflictos de horario de un curso",
+                "operationId": "c03cf240e61ed563852f620e2c682347",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Conflictos del curso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReporteConflictos"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Curso no encontrado"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/resolver-conflicto/{conflicto_id}": {
+            "post": {
+                "tags": [
+                    "Conflictos"
+                ],
+                "summary": "Resolver un conflicto de horario específico",
+                "operationId": "a26a29c6683e8b8e819f5da346bfd643",
+                "parameters": [
+                    {
+                        "name": "conflicto_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "accion": {
+                                        "type": "string",
+                                        "enum": [
+                                            "reasignar_profesor",
+                                            "cambiar_horario",
+                                            "cancelar_asignacion"
+                                        ],
+                                        "example": "cambiar_horario"
+                                    },
+                                    "profesor_id": {
+                                        "description": "Requerido para reasignar_profesor y cancelar_asignacion",
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "curso_id": {
+                                        "description": "Requerido para reasignar_profesor y cancelar_asignacion",
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "horario_id": {
+                                        "description": "Requerido para cambiar_horario",
+                                        "type": "integer",
+                                        "example": 7
+                                    },
+                                    "dia": {
+                                        "description": "Requerido para cambiar_horario",
+                                        "type": "string",
+                                        "example": "Martes"
+                                    },
+                                    "hora_inicio": {
+                                        "description": "Requerido para cambiar_horario",
+                                        "type": "string",
+                                        "example": "14:00"
+                                    },
+                                    "hora_fin": {
+                                        "description": "Requerido para cambiar_horario",
+                                        "type": "string",
+                                        "example": "16:00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Conflicto resuelto",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResolucionConflicto"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Datos inválidos o acción no permitida"
+                    },
+                    "404": {
+                        "description": "Conflicto no encontrado"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/cursos": {
+            "get": {
+                "tags": [
+                    "Curso"
+                ],
+                "summary": "Listar todos los cursos",
+                "operationId": "780c58852b7affa86ab8b0afe9edbff8",
+                "responses": {
+                    "200": {
+                        "description": "Lista de cursos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Curso"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Curso"
+                ],
+                "summary": "Crear un nuevo curso",
+                "operationId": "f8ba1ed92d154d21f5284539ed7c4836",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Curso"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Curso creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Curso"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Datos inválidos"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/cursos/{id}": {
+            "get": {
+                "tags": [
+                    "Curso"
+                ],
+                "summary": "Obtener un curso por ID",
+                "operationId": "48106c82ce8ad59ebaeb2b23abeb33f0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Curso encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Curso"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrado"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Curso"
+                ],
+                "summary": "Actualizar un curso",
+                "operationId": "d689f79e30b5c3b36011b7f1b8067843",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Curso"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Curso actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Curso"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Datos inválidos"
+                    },
+                    "404": {
+                        "description": "No encontrado"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Curso"
+                ],
+                "summary": "Eliminar un curso",
+                "operationId": "88073d7d6b811e2f13bce15a8e13e512",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Curso eliminado"
+                    },
+                    "404": {
+                        "description": "No encontrado"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profesores/{id}/disponibilidad": {
+            "get": {
+                "tags": [
+                    "Disponibilidad"
+                ],
+                "summary": "Obtener la disponibilidad de un profesor",
+                "operationId": "3ce35dc2981e93acd092bb5670c2e1dc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Disponibilidad del profesor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "required": [
+                                            "profesor_id",
+                                            "dia",
+                                            "hora_inicio",
+                                            "hora_fin"
+                                        ],
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "profesor_id": {
+                                                "type": "integer",
+                                                "example": 2
+                                            },
+                                            "dia": {
+                                                "type": "string",
+                                                "example": "Lunes"
+                                            },
+                                            "hora_inicio": {
+                                                "type": "string",
+                                                "example": "08:00"
+                                            },
+                                            "hora_fin": {
+                                                "type": "string",
+                                                "example": "10:00"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Profesor no encontrado"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Disponibilidad"
+                ],
+                "summary": "Definir disponibilidad de un profesor",
+                "operationId": "d14f31e6fe996722dc5b249c29fc77a1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "profesor_id",
+                                    "dia",
+                                    "hora_inicio",
+                                    "hora_fin"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "profesor_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "dia": {
+                                        "type": "string",
+                                        "example": "Lunes"
+                                    },
+                                    "hora_inicio": {
+                                        "type": "string",
+                                        "example": "08:00"
+                                    },
+                                    "hora_fin": {
+                                        "type": "string",
+                                        "example": "10:00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Disponibilidad registrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "required": [
+                                        "profesor_id",
+                                        "dia",
+                                        "hora_inicio",
+                                        "hora_fin"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "profesor_id": {
+                                            "type": "integer",
+                                            "example": 2
+                                        },
+                                        "dia": {
+                                            "type": "string",
+                                            "example": "Lunes"
+                                        },
+                                        "hora_inicio": {
+                                            "type": "string",
+                                            "example": "08:00"
+                                        },
+                                        "hora_fin": {
+                                            "type": "string",
+                                            "example": "10:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Datos inválidos"
+                    },
+                    "404": {
+                        "description": "Profesor no encontrado"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profesores/{id}/disponibilidad/{disponibilidad_id}": {
+            "put": {
+                "tags": [
+                    "Disponibilidad"
+                ],
+                "summary": "Actualizar disponibilidad de un profesor",
+                "operationId": "06ca62e6ecb17eb260074f12c44f8b3f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "disponibilidad_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "profesor_id",
+                                    "dia",
+                                    "hora_inicio",
+                                    "hora_fin"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "profesor_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "dia": {
+                                        "type": "string",
+                                        "example": "Lunes"
+                                    },
+                                    "hora_inicio": {
+                                        "type": "string",
+                                        "example": "08:00"
+                                    },
+                                    "hora_fin": {
+                                        "type": "string",
+                                        "example": "10:00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Disponibilidad actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "required": [
+                                        "profesor_id",
+                                        "dia",
+                                        "hora_inicio",
+                                        "hora_fin"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "profesor_id": {
+                                            "type": "integer",
+                                            "example": 2
+                                        },
+                                        "dia": {
+                                            "type": "string",
+                                            "example": "Lunes"
+                                        },
+                                        "hora_inicio": {
+                                            "type": "string",
+                                            "example": "08:00"
+                                        },
+                                        "hora_fin": {
+                                            "type": "string",
+                                            "example": "10:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Datos inválidos"
+                    },
+                    "404": {
+                        "description": "Profesor o disponibilidad no encontrados"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Disponibilidad"
+                ],
+                "summary": "Eliminar disponibilidad de un profesor",
+                "operationId": "9edbe947fa2af689367e0af150ae9d4b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "disponibilidad_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Disponibilidad eliminada"
+                    },
+                    "404": {
+                        "description": "Profesor o disponibilidad no encontrados"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/horarios": {
+            "get": {
+                "tags": [
+                    "Horario"
+                ],
+                "summary": "Listar todos los horarios",
+                "operationId": "590db7e682b752242febfb6ca6d2850f",
+                "responses": {
+                    "200": {
+                        "description": "Lista de horarios",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Horario"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Horario"
+                ],
+                "summary": "Crear un nuevo horario",
+                "operationId": "7b2e04537064812428252946ced9bf74",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Horario"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Horario creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Horario"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Datos inválidos"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/horarios/{id}": {
+            "get": {
+                "tags": [
+                    "Horario"
+                ],
+                "summary": "Obtener un horario por ID",
+                "operationId": "a00e9b283043bed44d35744550826dec",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Horario encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Horario"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrado"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Horario"
+                ],
+                "summary": "Actualizar un horario",
+                "operationId": "4f9bf390b4e504c36e65a13a74f6a466",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Horario"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Horario actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Horario"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Datos inválidos"
+                    },
+                    "404": {
+                        "description": "No encontrado"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Horario"
+                ],
+                "summary": "Eliminar un horario",
+                "operationId": "313f5295e74b36624aea5cd2286b939b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Horario eliminado"
+                    },
+                    "404": {
+                        "description": "No encontrado"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/materias": {
+            "get": {
+                "tags": [
+                    "Materia"
+                ],
+                "summary": "Listar todas las materias",
+                "operationId": "6ba6bbe8221d7952e88441d7181c53bd",
+                "responses": {
+                    "200": {
+                        "description": "Lista de materias",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Materia"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Materia"
+                ],
+                "summary": "Crear una nueva materia",
+                "operationId": "a60d57c04d92a8cb680bde29c0c6245a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Materia"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Materia creada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Materia"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Datos inválidos"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/materias/{id}": {
+            "get": {
+                "tags": [
+                    "Materia"
+                ],
+                "summary": "Obtener una materia por ID",
+                "operationId": "cab6b0dca7fef0e628bbd4a559f07810",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Materia encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Materia"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrada"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Materia"
+                ],
+                "summary": "Actualizar una materia",
+                "operationId": "ae2d5fcc5eaa8addf2df21e63c4d15e5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Materia"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Materia actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Materia"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Datos inválidos"
+                    },
+                    "404": {
+                        "description": "No encontrada"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Materia"
+                ],
+                "summary": "Eliminar una materia",
+                "operationId": "5d54e7e11ca22071226c65338cd239a1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Materia eliminada"
+                    },
+                    "404": {
+                        "description": "No encontrada"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profesores": {
+            "get": {
+                "tags": [
+                    "Profesor"
+                ],
+                "summary": "Listar todos los profesores",
+                "operationId": "4fb356c8f9f76222d91ac13d077d88d6",
+                "responses": {
+                    "200": {
+                        "description": "Lista de profesores",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Profesor"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Profesor"
+                ],
+                "summary": "Crear un nuevo profesor",
+                "operationId": "a6efdeb38cd3618ad26f5e0823ba3102",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Profesor"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Profesor creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Profesor"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Datos inválidos"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profesores/{id}": {
+            "get": {
+                "tags": [
+                    "Profesor"
+                ],
+                "summary": "Obtener un profesor por ID",
+                "operationId": "f651b256d96db262444a65613f02a3f7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Profesor encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Profesor"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrado"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Profesor"
+                ],
+                "summary": "Actualizar un profesor",
+                "operationId": "25fd8a26e11bbb6fcccae62fc2eeefe4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Profesor"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profesor actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Profesor"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Datos inválidos"
+                    },
+                    "404": {
+                        "description": "No encontrado"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Profesor"
+                ],
+                "summary": "Eliminar un profesor",
+                "operationId": "8302b42c61dbec626d9f7b1a0f01bf00",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Profesor eliminado"
+                    },
+                    "404": {
+                        "description": "No encontrado"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ReporteConflictos": {
+                "properties": {
+                    "total_conflictos": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "conflictos": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "profesor_id": {
+                                    "type": "integer",
+                                    "example": 2
+                                },
+                                "curso1_id": {
+                                    "type": "integer",
+                                    "example": 3
+                                },
+                                "curso1_nombre": {
+                                    "type": "string",
+                                    "example": "Matemáticas Avanzadas"
+                                },
+                                "curso2_id": {
+                                    "type": "integer",
+                                    "example": 5
+                                },
+                                "curso2_nombre": {
+                                    "type": "string",
+                                    "example": "Física Básica"
+                                },
+                                "dia": {
+                                    "type": "string",
+                                    "example": "Lunes"
+                                },
+                                "horario1": {
+                                    "properties": {
+                                        "hora_inicio": {
+                                            "type": "string",
+                                            "example": "08:00"
+                                        },
+                                        "hora_fin": {
+                                            "type": "string",
+                                            "example": "10:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "horario2": {
+                                    "properties": {
+                                        "hora_inicio": {
+                                            "type": "string",
+                                            "example": "09:00"
+                                        },
+                                        "hora_fin": {
+                                            "type": "string",
+                                            "example": "11:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "VerificacionConflicto": {
+                "properties": {
+                    "conflicto": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "mensaje": {
+                        "type": "string",
+                        "example": "Existe un conflicto de horario"
+                    },
+                    "detalles": {
+                        "properties": {
+                            "profesor_id": {
+                                "type": "integer",
+                                "example": 2
+                            },
+                            "curso_id": {
+                                "type": "integer",
+                                "example": 3
+                            },
+                            "dia": {
+                                "type": "string",
+                                "example": "Lunes"
+                            },
+                            "hora_inicio": {
+                                "type": "string",
+                                "example": "08:00"
+                            },
+                            "hora_fin": {
+                                "type": "string",
+                                "example": "10:00"
+                            },
+                            "conflicto_con": {
+                                "type": "string",
+                                "example": "Curso de Física"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "ResolucionConflicto": {
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "mensaje": {
+                        "type": "string",
+                        "example": "Conflicto resuelto correctamente"
+                    },
+                    "accion_tomada": {
+                        "type": "string",
+                        "example": "cambiar_horario"
+                    },
+                    "detalles": {
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "Curso": {
+                "required": [
+                    "nombre"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Matemáticas"
+                    },
+                    "descripcion": {
+                        "type": "string",
+                        "example": "Curso de álgebra básica"
+                    }
+                },
+                "type": "object"
+            },
+            "Horario": {
+                "required": [
+                    "profesor_id",
+                    "dia",
+                    "hora_inicio",
+                    "hora_fin"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "profesor_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "dia": {
+                        "type": "string",
+                        "example": "Lunes"
+                    },
+                    "hora_inicio": {
+                        "type": "string",
+                        "example": "08:00"
+                    },
+                    "hora_fin": {
+                        "type": "string",
+                        "example": "10:00"
+                    },
+                    "curso_id": {
+                        "type": "integer",
+                        "example": 3
+                    }
+                },
+                "type": "object"
+            },
+            "Materia": {
+                "required": [
+                    "nombre"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Física"
+                    },
+                    "descripcion": {
+                        "type": "string",
+                        "example": "Materia de física general"
+                    }
+                },
+                "type": "object"
+            },
+            "Profesor": {
+                "required": [
+                    "nombre"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Juan Pérez"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "juan@demo.com"
+                    }
+                },
+                "type": "object"
+            },
+            "VerificacionConflictoRequest": {
+                "required": [
+                    "profesor_id",
+                    "curso_id"
+                ],
+                "properties": {
+                    "profesor_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "curso_id": {
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "horario_id": {
+                        "type": "integer",
+                        "example": 5,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "VerificacionConflictoResponse": {
+                "properties": {
+                    "conflicto": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "mensaje": {
+                        "type": "string",
+                        "example": "Existe un conflicto de horario"
+                    },
+                    "detalles": {
+                        "properties": {
+                            "profesor_id": {
+                                "type": "integer",
+                                "example": 2
+                            },
+                            "curso_id": {
+                                "type": "integer",
+                                "example": 3
+                            },
+                            "dia": {
+                                "type": "string",
+                                "example": "Lunes"
+                            },
+                            "hora_inicio": {
+                                "type": "string",
+                                "example": "08:00"
+                            },
+                            "hora_fin": {
+                                "type": "string",
+                                "example": "10:00"
+                            },
+                            "conflicto_con": {
+                                "type": "string",
+                                "example": "Curso de Física"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Asignación",
+            "description": "Asignación"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Conflictos",
+            "description": "Conflictos"
+        },
+        {
+            "name": "Curso",
+            "description": "Curso"
+        },
+        {
+            "name": "Disponibilidad",
+            "description": "Disponibilidad"
+        },
+        {
+            "name": "Horario",
+            "description": "Horario"
+        },
+        {
+            "name": "Materia",
+            "description": "Materia"
+        },
+        {
+            "name": "Profesor",
+            "description": "Profesor"
+        }
+    ]
+}
