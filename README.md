@@ -169,6 +169,31 @@ Todos los endpoints están protegidos con autenticación JWT, excepto el endpoin
 
 ### Requisitos
 
+- Docker y Docker Compose
+- Git
+
+### Instalación y Ejecución
+
+Para ejecutar el proyecto completo, simplemente utiliza el siguiente comando en la raíz del proyecto:
+
+```bash
+docker-compose up
+```
+
+Este comando:
+- Construirá las imágenes necesarias
+- Iniciará los contenedores (PHP, MySQL, Nginx)
+- Instalará las dependencias
+- Ejecutará las migraciones de la base de datos
+- Cargará los datos iniciales
+
+Una vez que los contenedores estén en ejecución, podrás acceder a:
+
+- **API Backend**: http://localhost:8080
+- **Interfaz Frontend**: http://localhost:8081
+- **Pagina Swagger**: http://localhost:8080/docs
+- **JSON Swagger**: http://localhost:8080/swagger.json
+
 ## Características Principales
 
 ### 1. Prevención de Conflictos de Horarios
