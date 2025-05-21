@@ -177,7 +177,7 @@ Todos los endpoints están protegidos con autenticación JWT, excepto el endpoin
 Para ejecutar el proyecto completo, simplemente utiliza el siguiente comando en la raíz del proyecto:
 
 ```bash
-docker-compose up
+docker-compose up --build
 ```
 
 Este comando:

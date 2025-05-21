@@ -31,6 +31,7 @@ function renderizarTablaProfesores(data) {
             <th>Apellido</th>
             <th>Email</th>
             <th>Teléfono</th>
+            <th>Documento</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -45,6 +46,7 @@ function renderizarTablaProfesores(data) {
         { data: 'apellido', defaultContent: '-' },
         { data: 'email', defaultContent: '-' },
         { data: 'telefono', defaultContent: '-' },
+        { data: 'documento', defaultContent: '-' },
         { data: null, render: function(data, type, row) {
             return `<button class='btn btn-sm btn-primary' onclick='editarProfesor(${row.id})'>Editar</button> <button class='btn btn-sm btn-danger' onclick='eliminarProfesor(${row.id})'>Eliminar</button>`;
           }
@@ -67,6 +69,7 @@ function mostrarModalProfesor(profesor) {
       <input id="swal-apellido" class="swal2-input" placeholder="Apellido" value="${profesorData ? profesorData.apellido : ''}" data-bs-toggle="tooltip" data-bs-placement="top" title="Apellido del profesor">
       <input id="swal-email" class="swal2-input" placeholder="Email" value="${profesorData ? profesorData.email : ''}" data-bs-toggle="tooltip" data-bs-placement="top" title="Correo electrónico válido">
       <input id="swal-telefono" class="swal2-input" placeholder="Teléfono" value="${profesorData ? profesorData.telefono : ''}" data-bs-toggle="tooltip" data-bs-placement="top" title="Número de teléfono">
+      <input id="swal-documento" class="swal2-input" placeholder="Documento" value="${profesorData ? profesorData.documento : ''}" data-bs-toggle="tooltip" data-bs-placement="top" title="Número de documento de identidad">
     `,
     focusConfirm: false,
     showCancelButton: true,
@@ -75,7 +78,8 @@ function mostrarModalProfesor(profesor) {
       const apellido = $('#swal-apellido').val().trim();
       const email = $('#swal-email').val().trim();
       const telefono = $('#swal-telefono').val().trim();
-      if (!nombre || !apellido || !email || !telefono) {
+      const documento = $('#swal-documento').val().trim();
+      if (!nombre || !apellido || !email || !telefono || !documento) {
         Swal.showValidationMessage('Todos los campos son obligatorios');
         return false;
       }
@@ -83,7 +87,7 @@ function mostrarModalProfesor(profesor) {
         Swal.showValidationMessage('El email no es válido');
         return false;
       }
-      return { nombre, apellido, email, telefono };
+      return { nombre, apellido, email, telefono, documento };
     },
     didOpen: () => {
       var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));

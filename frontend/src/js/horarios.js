@@ -4,8 +4,10 @@ $(document).ready(function () {
 });
 
 let profesores = [];
+let cursos = [];
 
 function cargarHorarios() {
+
   $.ajax({
     url: '/api/profesores',
     type: 'GET',
@@ -15,11 +17,43 @@ function cargarHorarios() {
     success: function (profesoresData) {
       console.log('Profesores cargados:', profesoresData);
       profesores = profesoresData.data || [];
-      cargarDatosHorarios();
+      
+      $.ajax({
+        url: '/api/cursos',
+        type: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        success: function (cursosData) {
+          console.log('Cursos cargados:', cursosData);
+          cursos = cursosData.data || [];
+          cargarDatosHorarios();
+        },
+        error: function (xhr) {
+          console.error('Error al cargar cursos:', xhr);
+          cargarDatosHorarios();
+        }
+      });
     },
     error: function (xhr) {
       console.error('Error al cargar profesores:', xhr);
-      cargarDatosHorarios();
+      
+      $.ajax({
+        url: '/api/cursos',
+        type: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        success: function (cursosData) {
+          console.log('Cursos cargados:', cursosData);
+          cursos = cursosData.data || [];
+          cargarDatosHorarios();
+        },
+        error: function (xhr) {
+          console.error('Error al cargar cursos:', xhr);
+          cargarDatosHorarios();
+        }
+      });
     }
   });
 }
@@ -41,6 +75,7 @@ function cargarDatosHorarios() {
               <tr>
                 <th>ID</th>
                 <th>Profesor</th>
+                <th>Curso</th>
                 <th>Día</th>
                 <th>Hora Inicio</th>
                 <th>Hora Fin</th>
@@ -79,6 +114,35 @@ function cargarDatosHorarios() {
               },
               defaultContent: '-' 
             },
+            { 
+              data: 'curso_id', 
+              render: function(data, type, row) {
+                if (data) {
+                  const curso = cursos.find(c => c.id == data);
+                  if (curso) {
+                    return curso.nombre || `ID: ${data}`;
+                  } else {
+                    setTimeout(() => {
+                      $.ajax({
+                        url: '/api/cursos',
+                        type: 'GET',
+                        headers: {
+                          'Authorization': 'Bearer ' + localStorage.getItem('token')
+                        },
+                        success: function (cursosData) {
+                          cursos = cursosData.data || [];
+                          $('#horarios-table').DataTable().ajax.reload();
+                        }
+                      });
+                    }, 100);
+                    return `ID: ${data}`;
+                  }
+                } else {
+                  return 'No asignado';
+                }
+              },
+              defaultContent: 'No asignado' 
+            },
             { data: 'dia', defaultContent: '-' },
             { data: 'hora_inicio', defaultContent: '-' },
             { data: 'hora_fin', defaultContent: '-' },
@@ -113,6 +177,12 @@ function mostrarModalHorario(horario) {
   profesores.forEach(profesor => {
     const selected = horarioData && horarioData.profesor_id == profesor.id ? 'selected' : '';
     profesoresOptions += `<option value="${profesor.id}" ${selected}>${profesor.nombre} ${profesor.apellido}</option>`;
+  });
+  
+  let cursosOptions = '<option value="">Seleccione un curso (opcional)</option>';
+  cursos.forEach(curso => {
+    const selected = horarioData && horarioData.curso_id == curso.id ? 'selected' : '';
+    cursosOptions += `<option value="${curso.id}" ${selected}>${curso.nombre}</option>`;
   });
   
   const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
@@ -163,6 +233,12 @@ function mostrarModalHorario(horario) {
         </select>
       </div>
       <div class="form-group">
+        <label for="swal-curso_id" class="form-label">Curso</label>
+        <select id="swal-curso_id" class="custom-select">
+          ${cursosOptions}
+        </select>
+      </div>
+      <div class="form-group">
         <label for="swal-dia" class="form-label">Día</label>
         <select id="swal-dia" class="custom-select">
           ${diasOptions}
@@ -181,6 +257,7 @@ function mostrarModalHorario(horario) {
     showCancelButton: true,
     preConfirm: () => {
       const profesor_id = $('#swal-profesor_id').val();
+      const curso_id = $('#swal-curso_id').val();
       const dia = $('#swal-dia').val();
       const hora_inicio = $('#swal-hora_inicio').val().trim();
       const hora_fin = $('#swal-hora_fin').val().trim();
@@ -205,7 +282,13 @@ function mostrarModalHorario(horario) {
         return false;
       }
       
-      return { profesor_id: parseInt(profesor_id), dia, hora_inicio, hora_fin };
+      return { 
+        profesor_id: parseInt(profesor_id), 
+        curso_id: curso_id ? parseInt(curso_id) : null,
+        dia, 
+        hora_inicio, 
+        hora_fin 
+      };
     },
     didOpen: () => {
       var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
